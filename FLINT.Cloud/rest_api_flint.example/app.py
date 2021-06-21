@@ -8,6 +8,7 @@ from datetime import datetime
 from flask_swagger import swagger
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
+from shutil import copyfile
 
 app = Flask(__name__)
 CORS(app, origins=[ 'http://127.0.0.1:8080/','http://127.0.0.1:8000','http://localhost:5000',r'^https://.+example.com$'])
@@ -119,6 +120,7 @@ def point():
 	res = subprocess.run(['moja.cli', '--config', point_example, '--config', lib_simple, '--logging_config', logging_debug], stdout=f)
 	e = time.time()
 	UPLOAD_DIRECTORY = "./"	
+	copyfile("./" + timestampStr + "point_example.csv", "./output/" + timestampStr + "point_example.csv")
 	return send_from_directory(UPLOAD_DIRECTORY,timestampStr + "point_example.csv", as_attachment=True), 200
 
 
@@ -150,6 +152,7 @@ def rothc():
 	res = subprocess.run(['moja.cli', '--config', point_example, '--config', lib_simple, '--logging_config', logging_debug], stdout=f)
 	e = time.time()
 	UPLOAD_DIRECTORY = "./"	
+	copyfile("./" + timestampStr + "point_rothc_example.csv", "./output/" + timestampStr + "point_rothc_example.csv")
 	return send_from_directory(UPLOAD_DIRECTORY,timestampStr + "point_rothc_example.csv", as_attachment=True), 200
 
 

@@ -14,4 +14,5 @@ How to run?
 
 Video demo: https://drive.google.com/file/d/1SFCdSremLiqABQEc3YFnnJaIZvj3emVJ/view?usp=sharing
 
-![image-20210616022214843](C:\Users\shubh\AppData\Roaming\Typora\typora-user-images\image-20210616022214843.png)
+Demo:
+![image](https://user-images.githubusercontent.com/13800316/122122257-365e8d00-ce4a-11eb-9acf-13df0e0e0678.png)
