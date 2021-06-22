@@ -121,6 +121,7 @@ def point():
 	e = time.time()
 	UPLOAD_DIRECTORY = "./"	
 	copyfile("./" + timestampStr + "point_example.csv", "./output/" + timestampStr + "point_example.csv")
+	copyfile("./" + "Moja_Debug.log", "./output/" + timestampStr + "point_example.csv_Moja_Debug.log")
 	return send_from_directory(UPLOAD_DIRECTORY,timestampStr + "point_example.csv", as_attachment=True), 200
 
 
@@ -153,6 +154,8 @@ def rothc():
 	e = time.time()
 	UPLOAD_DIRECTORY = "./"	
 	copyfile("./" + timestampStr + "point_rothc_example.csv", "./output/" + timestampStr + "point_rothc_example.csv")
+	copyfile("./" + "Moja_Debug.log", "./output/" + timestampStr + "point_rothc_example.csv_Moja_Debug.log")
+
 	return send_from_directory(UPLOAD_DIRECTORY,timestampStr + "point_rothc_example.csv", as_attachment=True), 200
 
 

@@ -19,4 +19,5 @@ services:
     container_name: basic-ui-poc
     volumes:
        - ./basic-ui:/usr/src/app/basic-ui
+       - ./FLINT.Cloud/rest_api_flint.example/output:/server/output
        - /usr/src/app/basic-ui/node_modules
