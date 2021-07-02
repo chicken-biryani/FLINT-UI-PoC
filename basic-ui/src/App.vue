@@ -19,11 +19,9 @@
 
         </md-card-content>
 
-                  <md-button class="md-raised md-accent" v-on:click="cancel_operation()">CANCEL </md-button>
+          <md-button class="md-raised md-accent" v-on:click="apiRoute_point()">Point </md-button>
 
-        <md-card-content>
-
-        </md-card-content>
+          <md-button class="md-raised md-accent" v-on:click="send_point_config()">Send Point config </md-button>
 
       </md-card>
 
@@ -32,12 +30,14 @@
           <div class="md-title">{{title}}</div>
         </md-card-header>
       </md-card>
+
   </div>
 </template>
 
 <script>
 import './main.js'
 const axios = require('axios')
+
 export default {
   name: 'App',
   data: function () {
@@ -46,6 +46,18 @@ export default {
     }
   },
   methods: {
+    uploadFile () {
+      this.Images = this.$refs.file.files[0]
+    },
+    submitFile () {
+      const formData = new FormData()
+      formData.append('file', this.Images)
+      const headers = { 'Content-Type': 'multipart/form-data' }
+      axios.post('http://127.0.0.1:8080/point', formData, { headers }).then((res) => {
+        console.log(res.data.files) // binary representation of the file
+        console.log(res.status) // HTTP status
+      })
+    },
     apiRoute_spec: function () {
       // fetch('http://127.0.0.1:8080/spec')
       // .then(response => response.json())
@@ -82,6 +94,27 @@ export default {
         .then(response => console.log(response))
         .catch(error => console.log(error))
       this.title = 'ROTHC route invoked'
+      return this.title
+    },
+    send_point_config: function () {
+      var file = require('./FLINT_configs/point_example.json')
+      var formData = new FormData()
+      formData.append('modified_point_example.json', file)
+      // console.log([...formData])
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8080/point',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (response) {
+          console.log(response)
+        })
+
+      this.title = 'Config sent'
       return this.title
     },
     cancel_operation: function () {
