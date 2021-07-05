@@ -20,6 +20,7 @@
         </md-card-content>
 
                   <md-button class="md-raised md-accent" v-on:click="cancel_operation()">CANCEL </md-button>
+                  <md-button class="md-raised md-accent" v-on:click="send_point_config()"> Send Point Config </md-button>
 
         <md-card-content>
 
@@ -37,6 +38,8 @@
 
 <script>
 import './main.js'
+import file from './FLINT_configs/point_example.json'
+
 const axios = require('axios')
 export default {
   name: 'App',
@@ -82,6 +85,26 @@ export default {
         .then(response => console.log(response))
         .catch(error => console.log(error))
       this.title = 'ROTHC route invoked'
+      return this.title
+    },
+
+    send_point_config: function () {
+      console.log(file)
+      const json = JSON.stringify(file)
+      const blob = new Blob([json], {
+        type: 'application/json'
+      })
+
+      var formData = new FormData()
+      formData.append('file', blob)
+      // console.log(blob)
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8080/point',
+        data: formData
+      }).then(response => console.log(response))
+        .catch(error => console.log(error))
+      this.title = 'Config sent'
       return this.title
     },
     cancel_operation: function () {

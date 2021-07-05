@@ -106,9 +106,20 @@ def point():
 	s = time.time()
 	if 'file' in request.files:
 		uploaded_file = request.files['file']
-		if uploaded_file.filename != '':
-			uploaded_file.save('config/'+uploaded_file.filename)
-		point_example = 'config/'+uploaded_file.filename
+		if uploaded_file.filename == 'blob':
+			uploaded_file.save('config/modified_point_example.json')			
+			with open('config/modified_point_example.json',"r") as file:
+				data = file.read()
+			temp_y = json.loads(data)
+			for i in range(4,len(temp_y['Variables'])):
+    				for k, v in temp_y['Variables'][i].items():
+        				temp_y['Variables'][i][k] = float(v)
+			for i in range(0,len(temp_y['Pools'])):
+    				for k, v in temp_y['Pools'][i].items():
+        				temp_y['Pools'][i][k] = float(v)
+			with open("config/modified_point_example.json", "w") as outfile:
+				json.dump(temp_y,outfile,indent=2)
+			point_example = 'config/modified_point_example.json'
 	else:
 		point_example = 'config/point_example.json'
 	lib_simple = 'config/libs.base.simple.json'
@@ -120,6 +131,8 @@ def point():
 	res = subprocess.run(['moja.cli', '--config', point_example, '--config', lib_simple, '--logging_config', logging_debug], stdout=f)
 	e = time.time()
 	UPLOAD_DIRECTORY = "./"	
+	if os.path.exists('config/modified_point_example.json')==True:
+		os.rename('config/modified_point_example.json','config/modified_point_example'+timestampStr+'.json')
 	copyfile("./" + timestampStr + "point_example.csv", "./output/" + timestampStr + "point_example.csv")
 	copyfile("./" + "Moja_Debug.log", "./output/" + timestampStr + "point_example.csv_Moja_Debug.log")
 	return send_from_directory(UPLOAD_DIRECTORY,timestampStr + "point_example.csv", as_attachment=True), 200

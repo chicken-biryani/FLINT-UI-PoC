@@ -10,6 +10,7 @@ services:
     container_name: flint-api
     volumes:
        - ./FLINT.Cloud/rest_api_flint.example/output:/server/output
+       - ./FLINT.Cloud/rest_api_flint.example/config:/server/config
   basic-ui-poc:
     build:
       context: ./basic-ui
