@@ -47,6 +47,20 @@
                 ]
             }
         },
+        "/send_config": {
+            "post": {
+                "summary": "Send a point example config of FLINT",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Send a point example config FLINT"
+                    }
+                },
+                "tags": [
+                    "send-config"
+                ]
+            }
+        },
         "/help/{arg}": {
             "get": {
                 "summary": "Get Help Section",

@@ -20,7 +20,8 @@
         </md-card-content>
 
                   <md-button class="md-raised md-accent" v-on:click="cancel_operation()">CANCEL </md-button>
-                  <md-button class="md-raised md-accent" v-on:click="send_point_config()"> Send Point Config </md-button>
+                  <md-button class="md-raised md-accent" v-on:click="send_point_config()"> Send Point Config as file </md-button>
+                  <md-button class="md-raised md-accent" v-on:click="send_point_config_as_json()"> Send Point Config as JSON</md-button>
 
         <md-card-content>
 
@@ -39,6 +40,7 @@
 <script>
 import './main.js'
 import file from './FLINT_configs/point_example.json'
+import file300 from './FLINT_configs/point_example(300).json'
 
 const axios = require('axios')
 export default {
@@ -104,6 +106,23 @@ export default {
         data: formData
       }).then(response => console.log(response))
         .catch(error => console.log(error))
+      this.title = 'Config sent'
+      return this.title
+    },
+    send_point_config_as_json: function () {
+      console.log(file300)
+      // const json = JSON.stringify(file)
+      // const blob = new Blob([json], {
+      // type: 'application/json'
+      // })
+
+      // var formData = new FormData()
+      // formData.append('file', blob)
+      // console.log(blob)
+      axios.post('http://127.0.0.1:8080/send_config', file300)
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+
       this.title = 'Config sent'
       return this.title
     },
