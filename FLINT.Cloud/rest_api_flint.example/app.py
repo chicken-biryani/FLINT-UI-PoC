@@ -108,22 +108,15 @@ def point():
                     description: Point based example FLINT
             """
     s = time.time()
-    if 'file' in request.files:
-        uploaded_file = request.files['file']
-        if uploaded_file.filename == 'blob':
-            uploaded_file.save('config/modified_point_example.json')
-            with open('config/modified_point_example.json', "r") as file:
-                data = file.read()
-            temp_y = json.loads(data)
-            for i in range(4, len(temp_y['Variables'])):
-                for k, v in temp_y['Variables'][i].items():
-                    temp_y['Variables'][i][k] = float(v)
-            for i in range(0, len(temp_y['Pools'])):
-                for k, v in temp_y['Pools'][i].items():
-                    temp_y['Pools'][i][k] = float(v)
-            with open("config/modified_point_example.json", "w") as outfile:
-                json.dump(temp_y, outfile, indent=2)
-            point_example = 'config/modified_point_example.json'
+
+    if int(request.headers.get('Content-Length')) > 0:
+        request_data = request.get_json(force=True)
+
+        if request_data:
+            with open("config/received_point_example.json", "w") as outfile:
+                json.dump(request_data, outfile, indent=1)
+
+            point_example = 'config/received_point_example.json'
     else:
         point_example = 'config/point_example.json'
     lib_simple = 'config/libs.base.simple.json'
@@ -136,9 +129,9 @@ def point():
                          lib_simple, '--logging_config', logging_debug], stdout=f)
     e = time.time()
     UPLOAD_DIRECTORY = "./"
-    if os.path.exists('config/modified_point_example.json') == True:
-        os.rename('config/modified_point_example.json',
-                  'config/modified_point_example'+timestampStr+'.json')
+    if os.path.exists('config/received_point_example.json') == True:
+        os.rename('config/received_point_example.json',
+                  'config/received_point_example'+timestampStr+'.json')
     copyfile("./" + timestampStr + "point_example.csv",
              "./output/" + timestampStr + "point_example.csv")
     copyfile("./" + "Moja_Debug.log", "./output/" +
@@ -158,11 +151,14 @@ def rothc():
                     description: RothC based example FLINT
             """
     s = time.time()
-    if 'file' in request.files:
-        uploaded_file = request.files['file']
-        if uploaded_file.filename != '':
-            uploaded_file.save('config/'+uploaded_file.filename)
-        point_example = 'config/'+uploaded_file.filename
+    if int(request.headers.get('Content-Length')) > 0:
+        request_data = request.get_json(force=True)
+
+        if request_data:
+            with open("config/received_rothc_example.json", "w") as outfile:
+                json.dump(request_data, outfile, indent=1)
+
+            point_example = 'config/received_rothc_example.json'
     else:
         point_example = 'config/point_rothc_example.json'
     lib_simple = 'config/libs.base_rothc.simple.json'
@@ -175,27 +171,16 @@ def rothc():
                          lib_simple, '--logging_config', logging_debug], stdout=f)
     e = time.time()
     UPLOAD_DIRECTORY = "./"
+
+    if os.path.exists('config/received_rothc_example.json') == True:
+        os.rename('config/received_rothc_example.json',
+                  'config/received_rothc_example'+timestampStr+'.json')
     copyfile("./" + timestampStr + "point_rothc_example.csv",
              "./output/" + timestampStr + "point_rothc_example.csv")
     copyfile("./" + "Moja_Debug.log", "./output/" + timestampStr +
              "point_rothc_example.csv_Moja_Debug.log")
 
     return send_from_directory(UPLOAD_DIRECTORY, timestampStr + "point_rothc_example.csv", as_attachment=True), 200
-
-
-@app.route('/send_config', methods=['POST'])
-def send_config():
-    request_data = request.get_json()
-
-    if request_data:
-        with open("config/received_point_example.json", "w") as outfile:
-            json.dump(request_data, outfile, indent=2)
-
-    UPLOAD_DIRECTORY = "./config/"
-    dateTimeObj = datetime.now()
-    timestampStr = dateTimeObj.strftime("%H:%M:%S.%f - %b %d %Y")
-
-    return send_from_directory(UPLOAD_DIRECTORY, timestampStr + "received_point_example.json", as_attachment=True), 200
 
 
 if __name__ == '__main__':

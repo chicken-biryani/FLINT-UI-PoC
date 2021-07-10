@@ -1,6 +1,14 @@
 // vue.config.js
 module.exports = {
-    devServer: {
-          proxy: 'http://127.0.0.1:8080/',
-      }
+  chainWebpack: config => {
+    config.module
+      .rule('raw')
+      .test(/\.json$/)
+      .use('raw-loader')
+      .loader('raw-loader')
+      .end()
+  },
+  devServer: {
+    proxy: 'http://127.0.0.1:8080/'
   }
+}

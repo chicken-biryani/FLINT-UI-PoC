@@ -1,3 +1,7 @@
+/* eslint-disable import/no-webpack-loader-syntax */
+/* eslint-disable import/no-webpack-loader-syntax */
+/* eslint-disable import/no-webpack-loader-syntax */
+/* eslint-disable import/no-webpack-loader-syntax */
 <template>
   <div id="app">
       <md-card>
@@ -20,8 +24,8 @@
         </md-card-content>
 
                   <md-button class="md-raised md-accent" v-on:click="cancel_operation()">CANCEL </md-button>
-                  <md-button class="md-raised md-accent" v-on:click="send_point_config()"> Send Point Config as file </md-button>
-                  <md-button class="md-raised md-accent" v-on:click="send_point_config_as_json()"> Send Point Config as JSON</md-button>
+                  <md-button class="md-raised md-accent" v-on:click="send_point_config_as_json()"> Send Point Config as JSON </md-button>
+                  <md-button class="md-raised md-accent" v-on:click="send_rothc_config_as_json()"> Send RothC Config as JSON</md-button>
 
         <md-card-content>
 
@@ -34,27 +38,29 @@
           <div class="md-title">{{title}}</div>
         </md-card-header>
       </md-card>
+
   </div>
 </template>
 
 <script>
 import './main.js'
-import file from './FLINT_configs/point_example.json'
-import file300 from './FLINT_configs/point_example(300).json'
+// eslint-disable-next-line no-unused-vars
+import file_point from 'raw-loader!./FLINT_configs/point_example.json'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import file300 from 'raw-loader!./FLINT_configs/point_example(300).json'
+import file_rothc from 'raw-loader!./FLINT_configs/point_rothc_example.json'
 
 const axios = require('axios')
 export default {
   name: 'App',
   data: function () {
+    console.log({ file300 })
     return {
       title: 'Displays the current execution'
     }
   },
   methods: {
     apiRoute_spec: function () {
-      // fetch('http://127.0.0.1:8080/spec')
-      // .then(response => response.json())
-      // .then(json => console.log(json))
       axios.get('http://127.0.0.1:8080/spec')
         .then(response => console.log(response))
         .catch(error => console.log(error))
@@ -90,40 +96,20 @@ export default {
       return this.title
     },
 
-    send_point_config: function () {
-      console.log(file)
-      const json = JSON.stringify(file)
-      const blob = new Blob([json], {
-        type: 'application/json'
-      })
-
-      var formData = new FormData()
-      formData.append('file', blob)
-      // console.log(blob)
-      axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8080/point',
-        data: formData
-      }).then(response => console.log(response))
-        .catch(error => console.log(error))
-      this.title = 'Config sent'
-      return this.title
-    },
     send_point_config_as_json: function () {
-      console.log(file300)
-      // const json = JSON.stringify(file)
-      // const blob = new Blob([json], {
-      // type: 'application/json'
-      // })
-
-      // var formData = new FormData()
-      // formData.append('file', blob)
-      // console.log(blob)
-      axios.post('http://127.0.0.1:8080/send_config', file300)
+      axios.post('http://127.0.0.1:8080/point', file300)
         .then(response => console.log(response))
         .catch(error => console.log(error))
 
-      this.title = 'Config sent'
+      this.title = 'Point config sent'
+      return this.title
+    },
+    send_rothc_config_as_json: function () {
+      axios.post('http://127.0.0.1:8080/rothc', file_rothc)
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+
+      this.title = 'RothC config sent'
       return this.title
     },
     cancel_operation: function () {
